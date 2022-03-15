@@ -4,6 +4,7 @@ import { SetterOrUpdater } from 'recoil';
 import { FaPen } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
 import type { ITodoTypes } from '../../../recoil/todo';
+import TodoModal from '../../TodoModal/TodoModal';
 
 interface TodoItemPropsType {
     id: number;
@@ -47,6 +48,15 @@ const TodoItem: React.FC<TodoItemPropsType> = ({
 
     return (
         <>
+        {
+            isModal && 
+                <TodoModal 
+                    setIsModal={setIsModal}
+                    modifyContents={modifyContents}
+                    setModifyContents={setModifyContents}
+                    onModifyTodo={onModifyTodo}
+                />
+        }
             <div className="TodoItem">
                 <div 
                     title={contents}
