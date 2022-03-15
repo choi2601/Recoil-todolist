@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import './TodoItem.scss';
 import { SetterOrUpdater } from 'recoil';
 import { FaPen } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
@@ -16,7 +17,7 @@ interface TodoItemPropsType {
     setTodos: SetterOrUpdater<ITodoTypes[]>
 }
 
-const TodoItem: React.FC = ({
+const TodoItem: React.FC<TodoItemPropsType> = ({
     id,
     contents,
     isCompleted,
@@ -40,6 +41,7 @@ const TodoItem: React.FC = ({
             return todo.id === id ? { ...todo, contents: modifyContents } : todo;
         })
 
+        setTodos(updatedTodos);
         setIsModal(false);
     }, [id, modifyContents, setTodos, todos])
 
