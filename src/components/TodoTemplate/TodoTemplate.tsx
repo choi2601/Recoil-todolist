@@ -2,6 +2,7 @@ import React from 'react';
 import './TodoTemplate.scss';
 import TodoTitle from '../TodoTitle/TodoTitle';
 import TodoList from '../TodoList/TodoList';
+import TodoInput from '../TodoInput/TodoInput';
 
 const TodoTemplate: React.FC = () => {
     return (
@@ -9,7 +10,7 @@ const TodoTemplate: React.FC = () => {
             <div className="TodoTemplate-Contents">
                 <TodoTitle />
                 <TodoList />
-                {/* <TodoInput /> */}
+                <TodoInput />
             </div>
         </div>
     )
