@@ -1,17 +1,34 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import './TodoList.scss';
 import { useRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
-import { todosState } from '../../recoil/todo';
+import { todosState, todoIdState } from '../../recoil/todo';
 import type { ITodoTypes } from '../../recoil/todo';
-import { getTodoList } from '../../api/getTodoList';
+import { getTodoList, getTodoListById } from '../../api/getTodoList';
 import TodoItem from './TodoItem/TodoItem';
 
 const TodoList: React.FC = () => {
+    const [todoId] = useRecoilState<number>(todoIdState);
     const [todos, setTodos] = useRecoilState<ITodoTypes[]>(todosState);
     // isLoading, isError 대신에 status로 한번에 처리 가능 (ex. status === "loading" | status === 'error')
-    const { isLoading, isError, data, error } = useQuery("todos", getTodoList, {
+
+    // const { isLoading, isError, data, error } = useQuery("todos", getTodoList, {
+    //     refetchOnWindowFocus: false, 
+    //     retry: 0,
+    //     onSuccess: res => {
+    //         console.log(res);
+    //         const { data: { message } } = res;
+    //         setTodos(message);
+    //     },
+    //     onError: (e: Error) => {
+    //         console.log(e.message)
+    //     }    
+    // })
+
+    // ({queryKey}) => getTodoListById(queryKey[1])
+    const { isLoading, isError, data, error } = useQuery(["todos", todoId], () => getTodoListById(todoId), {
         refetchOnWindowFocus: false, 
+        // keepPreviousData: true,
         retry: 0,
         onSuccess: res => {
             console.log(res);

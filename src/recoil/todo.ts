@@ -11,6 +11,11 @@ export const inputState = atom<string>({
     default: ''
 })
 
+export const todoIdState = atom<number>({
+    key: 'todoId',
+    default: 1
+})
+
 export const todosState = atom<ITodoTypes[]>({
     key: 'todos',
     default: []
