@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import './TodoList.scss';
 import { useRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
@@ -9,11 +9,14 @@ import TodoItem from './TodoItem/TodoItem';
 
 const TodoList: React.FC = () => {
     const [todos, setTodos] = useRecoilState<ITodoTypes[]>(todosState);
+    // isLoading, isError 대신에 status로 한번에 처리 가능 (ex. status === "loading" | status === 'error')
     const { isLoading, isError, data, error } = useQuery("todos", getTodoList, {
         refetchOnWindowFocus: false, 
         retry: 0,
         onSuccess: res => {
-            console.log(res)
+            console.log(res);
+            const { data: { message } } = res;
+            setTodos(message);
         },
         onError: (e: Error) => {
             console.log(e.message)
@@ -32,9 +35,10 @@ const TodoList: React.FC = () => {
         setTodos(deletedTodos);
     }, [setTodos, todos]);
 
-    if(isError) {
-        return <span>Error: {error?.message}</span>
-    }
+
+    // if(isError) {
+    //     return <span>Error: {error?.message}</span>
+    // }
 
     return (
         <div className="TodoList">
