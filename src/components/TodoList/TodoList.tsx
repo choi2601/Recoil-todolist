@@ -1,12 +1,24 @@
 import React, { useCallback } from 'react';
 import './TodoList.scss';
 import { useRecoilState } from 'recoil';
+import { useQuery } from 'react-query';
 import { todosState } from '../../recoil/todo';
 import type { ITodoTypes } from '../../recoil/todo';
+import { getTodoList } from '../../api/getTodoList';
 import TodoItem from './TodoItem/TodoItem';
 
 const TodoList: React.FC = () => {
     const [todos, setTodos] = useRecoilState<ITodoTypes[]>(todosState);
+    const { isLoading, isError, data, error } = useQuery("todos", getTodoList, {
+        refetchOnWindowFocus: false, 
+        retry: 0,
+        onSuccess: res => {
+            console.log(res)
+        },
+        onError: (e: Error) => {
+            console.log(e.message)
+        }    
+    })
 
     const onComplete = useCallback((id: number): void => {
         const updatedTodos = todos.map((todo: ITodoTypes) => {
@@ -19,6 +31,10 @@ const TodoList: React.FC = () => {
         const deletedTodos = todos.filter((todo: ITodoTypes) => todo.id !== id);
         setTodos(deletedTodos);
     }, [setTodos, todos]);
+
+    if(isError) {
+        return <span>Error: {error?.message}</span>
+    }
 
     return (
         <div className="TodoList">
@@ -38,7 +54,7 @@ const TodoList: React.FC = () => {
                             setTodos={setTodos}
                         />
                     )
-                }) : <div className="TodoList-NoList">할 일이 없습니다. <p>자유롭게 추가해보세요!</p></div>
+                }) : <div className="TodoList-NoList">{isLoading ? <p>Loading...</p> : <>할 일이 없습니다. <p>자유롭게 추가해보세요!</p></>}</div>
             } 
             
         </div>
